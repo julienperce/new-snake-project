@@ -1,175 +1,159 @@
-from pygame.locals import *
-from random import randint
 import pygame
-import time
- 
-class Apple:
-    x = 0
-    y = 0
-    step = 44
- 
-    def __init__(self,x,y):
-        self.x = x * self.step
-        self.y = y * self.step
- 
-    def draw(self, surface, image):
-        surface.blit(image,(self.x, self.y)) 
- 
- 
-class Player:
-    x = [0]
-    y = [0]
-    step = 44
-    direction = 0
-    length = 3
- 
-    updateCountMax = 2
-    updateCount = 0
- 
-    def __init__(self, length):
-       self.length = length
-       for i in range(0,2000):
-           self.x.append(-100)
-           self.y.append(-100)
- 
-       # initial positions, no collision.
-       self.x[1] = 1*44
-       self.x[2] = 2*44
- 
-    def update(self):
- 
-        self.updateCount = self.updateCount + 1
-        if self.updateCount > self.updateCountMax:
- 
-            # update previous positions
-            for i in range(self.length-1,0,-1):
-                self.x[i] = self.x[i-1]
-                self.y[i] = self.y[i-1]
- 
-            # update position of head of snake
-            if self.direction == 0:
-                self.x[0] = self.x[0] + self.step
-            if self.direction == 1:
-                self.x[0] = self.x[0] - self.step
-            if self.direction == 2:
-                self.y[0] = self.y[0] - self.step
-            if self.direction == 3:
-                self.y[0] = self.y[0] + self.step
- 
-            self.updateCount = 0
- 
- 
-    def moveRight(self):
-        self.direction = 0
- 
-    def moveLeft(self):
-        self.direction = 1
- 
-    def moveUp(self):
-        self.direction = 2
- 
-    def moveDown(self):
-        self.direction = 3 
- 
-    def draw(self, surface, image):
-        for i in range(0,self.length):
-            surface.blit(image,(self.x[i],self.y[i])) 
- 
-class Game:
-    def isCollision(self,x1,y1,x2,y2,bsize):
-        if x1 >= x2 and x1 <= x2 + bsize:
-            if y1 >= y2 and y1 <= y2 + bsize:
-                return True
-        return False
- 
-class App:
- 
-    windowWidth = 800
-    windowHeight = 600
-    player = 0
-    apple = 0
- 
+import sys 
+import random
+
+# https://github.com/kiteco/python-youtube-code/blob/master/snake/snake.py 
+
+#GLOBAL CONSTANTS
+SCREEN_WIDTH = 480
+SCREEN_HEIGHT = 480
+GRIDSIZE = 20
+GRID_WIDTH = SCREEN_HEIGHT / GRIDSIZE
+GRID_HEIGHT = SCREEN_WIDTH / GRIDSIZE
+
+#LEGAL MOVES FOR THE SNAKE
+UP = (0, -1)
+DOWN = (0, 1)
+LEFT = (-1, 0)
+RIGHT = (1, 0)
+
+running = True
+
+class Snake(object):
     def __init__(self):
-        self._running = True
-        self._display_surf = None
-        self._image_surf = None
-        self._apple_surf = None
-        self.game = Game()
-        self.player = Player(3) 
-        self.apple = Apple(5,5)
- 
-    def on_init(self):
-        pygame.init()
-        self._display_surf = pygame.display.set_mode((self.windowWidth,self.windowHeight), pygame.HWSURFACE)
- 
-        pygame.display.set_caption('Pygame pythonspot.com example')
-        self._running = True
-        self._image_surf = pygame.image.load("block.jpg").convert()
-        self._apple_surf = pygame.image.load("block.jpg").convert()
- 
-    def on_event(self, event):
-        if event.type == QUIT:
-            self._running = False
- 
-    def on_loop(self):
-        self.player.update()
- 
-        # does snake eat apple?
-        for i in range(0,self.player.length):
-            if self.game.isCollision(self.apple.x,self.apple.y,self.player.x[i], self.player.y[i],44):
-                self.apple.x = randint(2,9) * 44
-                self.apple.y = randint(2,9) * 44
-                self.player.length = self.player.length + 1
- 
- 
-        # does snake collide with itself?
-        for i in range(2,self.player.length):
-            if self.game.isCollision(self.player.x[0],self.player.y[0],self.player.x[i], self.player.y[i],40):
-                print("You lose! Collision: ")
-                print("x[0] (" + str(self.player.x[0]) + "," + str(self.player.y[0]) + ")")
-                print("x[" + str(i) + "] (" + str(self.player.x[i]) + "," + str(self.player.y[i]) + ")")
-                exit(0)
- 
-        pass
- 
-    def on_render(self):
-        self._display_surf.fill((0,0,0))
-        self.player.draw(self._display_surf, self._image_surf)
-        self.apple.draw(self._display_surf, self._apple_surf)
-        pygame.display.flip()
- 
-    def on_cleanup(self):
-        pygame.quit()
- 
-    def on_execute(self):
-        if self.on_init() == False:
-            self._running = False
- 
-        while( self._running ):
-            pygame.event.pump()
-            keys = pygame.key.get_pressed() 
- 
-            if (keys[K_RIGHT]):
-                self.player.moveRight()
- 
-            if (keys[K_LEFT]):
-                self.player.moveLeft()
- 
-            if (keys[K_UP]):
-                self.player.moveUp()
- 
-            if (keys[K_DOWN]):
-                self.player.moveDown()
- 
-            if (keys[K_ESCAPE]):
-                self._running = False
- 
-            self.on_loop()
-            self.on_render()
- 
-            time.sleep (50.0 / 1000.0);
-        self.on_cleanup()
- 
-if __name__ == "__main__" :
-    theApp = App()
-    theApp.on_execute()
+        self.length = 1
+        self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))] # list of all positions of each block that snake is made of
+        self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
+        self.color = (17, 24, 47)
+    
+    def get_head_position(self):
+        return self.positions[0]
+
+    def turn(self, point):
+        # when snake is one block it can go 4 directions
+        if self.length > 1 and (point[0] * -1, point[1] * -1) == self.direction:
+            return
+        # when more, it can only go 3 directions (not reverse)
+        else:
+            self.direction = point
+
+    def move(self):
+        currentPos = self.get_head_position()
+        x, y = self.direction
+        newPos = (((currentPos[0] + (x*GRIDSIZE)) % SCREEN_WIDTH), (currentPos[1] + (y*GRIDSIZE)) % SCREEN_HEIGHT)
+        # check if game is over (our collision detection), [2:] checks if the new head of snake will hit a current part of the snake
+        if len(self.positions) > 2 and newPos in self.positions[2:]:
+            self.reset()
+            running = False
+        else:
+            self.positions.insert(0, newPos)
+            if len(self.positions) > self.length:
+                self.positions.pop()
+
+    def reset(self):
+        #restart game, basically calling init again
+        self.length = 1
+        self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]
+        self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
+        running = False
+
+    def draw(self, surface):
+        # draw a block for each x, y block in the snake's positions list
+        for pos in self.positions:
+            r = pygame.Rect((pos[0], pos[1]), (GRIDSIZE, GRIDSIZE))
+            pygame.draw.rect(surface, self.color, r)
+            pygame.draw.rect(surface, (93, 216, 228), r, 1)
+    
+    def handle_keys(self):
+        # KEY EVENT HANDLER
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                # force a sys exit and close first the game, and then running script
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                # yeah ion needa comment i think you know what's going on here
+                if event.key == pygame.K_UP:
+                    self.turn(UP)
+                elif event.key == pygame.K_DOWN:
+                    self.turn(DOWN)
+                elif event.key == pygame.K_LEFT:
+                    self.turn(LEFT)
+                elif event.key == pygame.K_RIGHT:
+                    self.turn(RIGHT)
+
+
+class Food(object):
+    def __init__(self):
+        self.position = (0, 0)
+        self.color = (223, 163, 49)
+        self.randomize_position()
+
+    def randomize_position(self):
+        self.position = (random.randint(0, GRID_HEIGHT-1)*GRIDSIZE, random.randint(0, GRID_HEIGHT-1)*GRIDSIZE)
+
+    def draw(self, surface):
+        r = pygame.Rect((self.position[0], self.position[1]), (GRIDSIZE, GRIDSIZE))
+        pygame.draw.rect(surface, self.color, r)
+        pygame.draw.rect(surface, (93, 216, 228), r, 1)
+
+def drawGrid(surface):
+    for y in range(0, int(GRID_HEIGHT)):
+        for x in range(0, int(GRID_WIDTH)):
+            if (x + y) % 2 == 0:
+                r = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
+                pygame.draw.rect(surface, (32, 32, 32), r)
+            else:
+                # if a perfect grid cannot be drawn 
+                r2 = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
+                pygame.draw.rect(surface, (64, 64, 64), r2)
+
+def main():
+    pygame.init()
+
+    clock = pygame.time.Clock()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+
+    # draw screen and frames
+    surface = pygame.Surface(screen.get_size())
+    surface = surface.convert()
+    drawGrid(surface)
+
+    # initialize classes, which is why we put capitals 
+    snake = Snake()
+    food = Food()
+     
+    score = 0
+
+    FONT = pygame.font.SysFont("monospace", 16)
+
+    while running:
+        # increment our clock at 10 FPS
+        clock.tick(10)
+        snake.handle_keys()
+        # fill background
+        drawGrid(surface)
+        
+        snake.move()
+        if snake.get_head_position() == food.position:
+            # if snake head is on same x, y as a food it has eaten it 
+            snake.length += 1
+            score += 1
+            # randomize x, y of next food bloock
+            food.randomize_position()
+        
+        # before updating our screen/frame, we need to redraw the snake and food based on their new positions
+        snake.draw(surface)
+        food.draw(surface)
+        
+        # update screen on event
+        screen.blit(surface, (0, 0))
+        
+        # display and update our score
+        scoreDisplay = FONT.render("SCORE : {}".format(score), 1, (0, 0, 0))
+        screen.blit(scoreDisplay, (5, 10))
+        
+        pygame.display.update()
+        
+
+main()
