@@ -19,6 +19,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 INDIGO = (75, 0, 130)
 VIOLET = (148, 0, 211)
+COLORS = (RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET)
 
 #LEGAL MOVES FOR THE SNAKE
 UP = (0, -1)
@@ -105,12 +106,20 @@ class Food(object):
         self.position1 = (random.randint(0, GRID_HEIGHT-1)*GRIDSIZE, random.randint(0, GRID_HEIGHT-1)*GRIDSIZE)
         self.position2 = (random.randint(0, GRID_HEIGHT-1)*GRIDSIZE, random.randint(0, GRID_HEIGHT-1)*GRIDSIZE)
 
+    def randomize_wrong_color(self):
+        r2color = random.choice(COLORS)
+        while r2color == self.foodCurrentColor:
+            r2color = random.choice(COLORS)
+        
+        return r2color
+
     def draw(self, surface):
         r1 = pygame.Rect((self.position1[0], self.position1[1]), (GRIDSIZE, GRIDSIZE))
         pygame.draw.rect(surface, self.foodCurrentColor, r1)
         pygame.draw.rect(surface, (0, 0, 0), r1, 1)
+        r2color = self.randomize_wrong_color()
         r2 = pygame.Rect((self.position2[0], self.position2[1]), (GRIDSIZE, GRIDSIZE))
-        pygame.draw.rect(surface, self.foodCurrentColor, r2)
+        pygame.draw.rect(surface, r2color, r2)
         pygame.draw.rect(surface, (0, 0, 0), r2, 1)
 
 def drawGrid(surface):
@@ -137,7 +146,7 @@ def main():
     # initialize classes, which is why we put capitals 
     snake = Snake()
     food = Food()
-     
+
     score = 0
 
     FONT = pygame.font.SysFont("arial", 16, bold=True)
@@ -159,7 +168,7 @@ def main():
                 food.foodCurrentColor = YELLOW
                 snake.length += 1
                 score += 1
-                # randomize x, y of next food bloock
+                # randomize x, y of next food block
                 food.randomize_position()
             elif snake.currentColor == ORANGE:
                 # if snake head is on same x, y as a food it has eaten it 
@@ -167,7 +176,7 @@ def main():
                 food.foodCurrentColor = GREEN
                 snake.length += 1
                 score += 1
-                # randomize x, y of next food bloock
+                # randomize x, y of next food block
                 food.randomize_position()
             elif snake.currentColor == YELLOW:
                 # if snake head is on same x, y as a food it has eaten it 
@@ -175,7 +184,7 @@ def main():
                 food.foodCurrentColor = BLUE
                 snake.length += 1
                 score += 1
-                # randomize x, y of next food bloock
+                # randomize x, y of next food block
                 food.randomize_position()
             elif snake.currentColor == GREEN:
                 # if snake head is on same x, y as a food it has eaten it 
@@ -183,7 +192,7 @@ def main():
                 food.foodCurrentColor = INDIGO
                 snake.length += 1
                 score += 1
-                # randomize x, y of next food bloock
+                # randomize x, y of next food block
                 food.randomize_position()
             elif snake.currentColor == BLUE:
                 # if snake head is on same x, y as a food it has eaten it 
@@ -191,7 +200,7 @@ def main():
                 food.foodCurrentColor = VIOLET
                 snake.length += 1
                 score += 1
-                # randomize x, y of next food bloock
+                # randomize x, y of next food block
                 food.randomize_position()
             elif snake.currentColor == INDIGO:
                 # if snake head is on same x, y as a food it has eaten it 
@@ -199,7 +208,7 @@ def main():
                 food.foodCurrentColor = RED
                 snake.length += 1
                 score += 1
-                # randomize x, y of next food bloock
+                # randomize x, y of next food block
                 food.randomize_position()
             elif snake.currentColor == VIOLET:
                 # if snake head is on same x, y as a food it has eaten it 
@@ -207,7 +216,7 @@ def main():
                 food.foodCurrentColor = ORANGE
                 snake.length += 1
                 score += 1
-                # randomize x, y of next food bloock
+                # randomize x, y of next food block
                 food.randomize_position()
         
         # before updating our screen/frame, we need to redraw the snake and food based on their new positions
