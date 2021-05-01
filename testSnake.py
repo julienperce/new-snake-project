@@ -21,6 +21,8 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 INDIGO = (75, 0, 130)
 VIOLET = (148, 0, 211)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
 COLORS = (RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET)
 
 #LEGAL MOVES FOR THE SNAKE
@@ -57,8 +59,7 @@ class Snake(object):
         newPos = (((currentPos[0] + (x*GRIDSIZE)) % SCREEN_WIDTH), (currentPos[1] + (y*GRIDSIZE)) % SCREEN_HEIGHT)
         # check if game is over (our collision detection), [2:] checks if the new head of snake will hit a current part of the snake
         if len(self.positions) > 2 and newPos in self.positions[2:]:
-            self.reset()
-            self.score = 0
+            end_game()
         else:
             self.positions.insert(0, newPos)
             if len(self.positions) > self.length:
@@ -151,8 +152,9 @@ def main():
         snake.move()
         if snake.get_head_position() == food.position1 or snake.get_head_position() == food.position2:
             if snake.get_head_position() == food.position2 and food.r2color != food.foodCurrentColor:
-                pygame.quit()
-                sys.exit(0)
+                """pygame.quit()
+                sys.exit(0)"""
+                end_game()
             else:    
                 if snake.currentColor == RED:
                     # if snake head is on same x, y as a food it has eaten it 
@@ -277,8 +279,10 @@ def main_hard():
         snake.move()
         if snake.get_head_position() == food.position1 or snake.get_head_position() == food.position2:
             if snake.get_head_position() == food.position2 and food.r2color != food.foodCurrentColor:
-                pygame.quit()
-                sys.exit(0)
+                """pygame.quit()
+                sys.exit(0)"""
+                print(snake.score)
+                end_game()
             else:    
                 if snake.currentColor == RED:
                     # if snake head is on same x, y as a food it has eaten it 
@@ -357,7 +361,6 @@ def main_hard():
         
         # update screen on event
         screen.blit(surface, (0, 0))
-        
         # display and update our score
         scoreDisplay = FONT.render("SCORE : {}".format(snake.score), 1, (255, 255, 255))
         #for asthetic effect, put nextColor in the color (possibly find a new way to structure this one day?)
@@ -408,6 +411,29 @@ def main_menu():
         # Main Menu Text
         screen.blit(easyDiff, (200, 400))
         screen.blit(hardDiff, (200, 300))
+        pygame.display.update()
+
+def end_game():
+    endMenu = True
+    clock.tick(10)
+
+    while endMenu:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+
+        screen.fill(BLACK)
+
+        snake = Snake()
+        score = snake.giveScore()
+
+        gameOver = FONT.render("Game Over", 1, WHITE)
+        scoreShow = FONT.render(f"Score : {score}", 1, WHITE)
+
+        # Main Menu Text
+        screen.blit(gameOver, (200, 400))
+        screen.blit(scoreShow, (200, 300))
         pygame.display.update()
     
 if __name__ == "__main__":
