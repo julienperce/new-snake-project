@@ -1,11 +1,11 @@
 import pygame
-import sys 
+import sys
 import random
 import time
 
-# https://github.com/kiteco/python-youtube-code/blob/master/snake/snake.py 
+# https://github.com/kiteco/python-youtube-code/blob/master/snake/snake.py
 
-#GLOBAL CONSTANTS
+# GLOBAL CONSTANTS
 SCREEN_WIDTH = 720
 SCREEN_HEIGHT = 720
 GRIDSIZE = 20
@@ -26,7 +26,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 COLORS = (RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET)
 
-#LEGAL MOVES FOR THE SNAKE
+# LEGAL MOVES FOR THE SNAKE
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
@@ -35,14 +35,16 @@ RIGHT = (1, 0)
 
 class Snake(object):
     currentColor = RED
-    
+
     def __init__(self):
         self.length = 1
-        self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))] # list of all positions of each block that snake is made of
+        self.positions = [
+            ((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))
+        ]  # list of all positions of each block that snake is made of
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
         self.color = RED
         self.score = 0
-    
+
     def get_head_position(self):
         return self.positions[0]
 
@@ -57,7 +59,10 @@ class Snake(object):
     def move(self):
         currentPos = self.get_head_position()
         x, y = self.direction
-        newPos = (((currentPos[0] + (x*GRIDSIZE)) % SCREEN_WIDTH), (currentPos[1] + (y*GRIDSIZE)) % SCREEN_HEIGHT)
+        newPos = (
+            ((currentPos[0] + (x * GRIDSIZE)) % SCREEN_WIDTH),
+            (currentPos[1] + (y * GRIDSIZE)) % SCREEN_HEIGHT,
+        )
         # check if game is over (our collision detection), [2:] checks if the new head of snake will hit a current part of the snake
         if len(self.positions) > 2 and newPos in self.positions[2:]:
             deathSound = pygame.mixer.Sound("sounds/snake_hits_itself.wav")
@@ -72,7 +77,7 @@ class Snake(object):
                 self.positions.pop()
 
     def reset(self):
-        #restart game, basically calling init again
+        # restart game, basically calling init again
         self.length = 1
         self.positions = [((SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 2))]
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
@@ -83,7 +88,7 @@ class Snake(object):
             r = pygame.Rect((pos[0], pos[1]), (GRIDSIZE, GRIDSIZE))
             pygame.draw.rect(surface, self.currentColor, r)
             pygame.draw.rect(surface, (255, 255, 255), r, 1)
-    
+
     def handle_keys(self):
         # KEY EVENT HANDLER
         for event in pygame.event.get():
@@ -105,8 +110,11 @@ class Snake(object):
 
 class Food(object):
     foodCurrentColor = ORANGE
-    foodCurrentColorName = "ORANGE" #make sure to set as str
+    foodCurrentColorName = "ORANGE"  # make sure to set as str
     r2color = random.choice(COLORS)
+    r2colorHard = random.choice(COLORS)
+    r3colorHard = random.choice(COLORS)
+    r4colorHard = random.choice(COLORS)
 
     def __init__(self):
         self.position = (0, 0)
@@ -114,8 +122,14 @@ class Food(object):
         self.randomize_position()
 
     def randomize_position(self):
-        self.position1 = (random.randint(0, GRID_HEIGHT-1)*GRIDSIZE, random.randint(0, GRID_HEIGHT-1)*GRIDSIZE)
-        self.position2 = (random.randint(0, GRID_HEIGHT-1)*GRIDSIZE, random.randint(0, GRID_HEIGHT-1)*GRIDSIZE)
+        self.position1 = (
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+        )
+        self.position2 = (
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+        )
 
     def draw(self, surface):
         r1 = pygame.Rect((self.position1[0], self.position1[1]), (GRIDSIZE, GRIDSIZE))
@@ -125,16 +139,58 @@ class Food(object):
         pygame.draw.rect(surface, self.r2color, r2)
         pygame.draw.rect(surface, (0, 0, 0), r2, 1)
 
+    def randomize_position_hard(self):
+        self.hardposition1 = (
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+        )
+        self.hardposition2 = (
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+        )
+        self.hardposition3 = (
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+        )
+        self.hardposition4 = (
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+            random.randint(0, GRID_HEIGHT - 1) * GRIDSIZE,
+        )
+
+    def draw_hard(self, surface):
+        r1hard = pygame.Rect(
+            (self.hardposition1[0], self.hardposition1[1]), (GRIDSIZE, GRIDSIZE)
+        )
+        pygame.draw.rect(surface, self.foodCurrentColor, r1hard)
+        pygame.draw.rect(surface, (0, 0, 0), r1hard, 1)
+        r2hard = pygame.Rect(
+            (self.hardposition2[0], self.hardposition2[1]), (GRIDSIZE, GRIDSIZE)
+        )
+        pygame.draw.rect(surface, self.r2colorHard, r2hard)
+        pygame.draw.rect(surface, (0, 0, 0), r2hard, 1)
+        r3hard = pygame.Rect(
+            (self.hardposition3[0], self.hardposition3[1]), (GRIDSIZE, GRIDSIZE)
+        )
+        pygame.draw.rect(surface, self.r3colorHard, r3hard)
+        pygame.draw.rect(surface, (0, 0, 0), r3hard, 1)
+        r4hard = pygame.Rect(
+            (self.hardposition4[0], self.hardposition4[1]), (GRIDSIZE, GRIDSIZE)
+        )
+        pygame.draw.rect(surface, self.r4colorHard, r4hard)
+        pygame.draw.rect(surface, (0, 0, 0), r4hard, 1)
+
+
 def drawGrid(surface):
     for y in range(0, int(GRID_HEIGHT)):
         for x in range(0, int(GRID_WIDTH)):
             if (x + y) % 2 == 0:
-                r = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
+                r = pygame.Rect((x * GRIDSIZE, y * GRIDSIZE), (GRIDSIZE, GRIDSIZE))
                 pygame.draw.rect(surface, (32, 32, 32), r)
             else:
-                # if a perfect grid cannot be drawn 
-                r2 = pygame.Rect((x*GRIDSIZE, y*GRIDSIZE), (GRIDSIZE, GRIDSIZE))
+                # if a perfect grid cannot be drawn
+                r2 = pygame.Rect((x * GRIDSIZE, y * GRIDSIZE), (GRIDSIZE, GRIDSIZE))
                 pygame.draw.rect(surface, (64, 64, 64), r2)
+
 
 def main():
     # draw screen and frames
@@ -142,7 +198,7 @@ def main():
     surface = surface.convert()
     drawGrid(surface)
 
-    # initialize classes, which is why we put capitals 
+    # initialize classes, which is why we put capitals
     snake = Snake()
     food = Food()
 
@@ -150,7 +206,7 @@ def main():
 
     loopOST = pygame.mixer.Sound("sounds/easy_diff.wav")
     loopOST.set_volume(0.1)
-    loopOST.play(-1) # -1 makes the sound loop forever when it ends
+    loopOST.play(-1)  # -1 makes the sound loop forever when it ends
 
     while True:
         # increment our clock at x FPS
@@ -158,10 +214,16 @@ def main():
         snake.handle_keys()
         # fill background
         drawGrid(surface)
-        
+
         snake.move()
-        if snake.get_head_position() == food.position1 or snake.get_head_position() == food.position2:
-            if snake.get_head_position() == food.position2 and food.r2color != food.foodCurrentColor:
+        if (
+            snake.get_head_position() == food.position1
+            or snake.get_head_position() == food.position2
+        ):
+            if (
+                snake.get_head_position() == food.position2
+                and food.r2color != food.foodCurrentColor
+            ):
                 """pygame.quit()
                 sys.exit(0)"""
                 pygame.mixer.stop()
@@ -170,9 +232,9 @@ def main():
                 deathSound.play()
                 time.sleep(1)
                 end_game()
-            else:    
+            else:
                 if snake.currentColor == RED:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = ORANGE
                     food.foodCurrentColor = YELLOW
                     food.foodCurrentColorName = "YELLOW"
@@ -182,7 +244,7 @@ def main():
                     # randomize x, y of next food block
                     food.randomize_position()
                 elif snake.currentColor == ORANGE:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = YELLOW
                     food.foodCurrentColor = GREEN
                     food.foodCurrentColorName = "GREEN"
@@ -192,7 +254,7 @@ def main():
                     # randomize x, y of next food block
                     food.randomize_position()
                 elif snake.currentColor == YELLOW:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = GREEN
                     food.foodCurrentColor = BLUE
                     food.foodCurrentColorName = "BLUE"
@@ -202,7 +264,7 @@ def main():
                     # randomize x, y of next food block
                     food.randomize_position()
                 elif snake.currentColor == GREEN:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = BLUE
                     food.foodCurrentColor = INDIGO
                     food.foodCurrentColorName = "INDIGO"
@@ -212,7 +274,7 @@ def main():
                     # randomize x, y of next food block
                     food.randomize_position()
                 elif snake.currentColor == BLUE:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = INDIGO
                     food.foodCurrentColor = VIOLET
                     food.foodCurrentColorName = "VIOLET"
@@ -222,7 +284,7 @@ def main():
                     # randomize x, y of next food block
                     food.randomize_position()
                 elif snake.currentColor == INDIGO:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = VIOLET
                     food.foodCurrentColor = RED
                     food.foodCurrentColorName = "RED"
@@ -232,7 +294,7 @@ def main():
                     # randomize x, y of next food block
                     food.randomize_position()
                 elif snake.currentColor == VIOLET:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = RED
                     food.foodCurrentColor = ORANGE
                     food.foodCurrentColorName = "ORANGE"
@@ -244,44 +306,59 @@ def main():
                 collectSound = pygame.mixer.Sound("sounds/collect_food.wav")
                 collectSound.set_volume(0.05)
                 collectSound.play()
-        
+
         # before updating our screen/frame, we need to redraw the snake and food based on their new positions
         snake.draw(surface)
         food.draw(surface)
-        
+
         # update screen on event
         screen.blit(surface, (0, 0))
-        
+
         # display and update our score
         scoreDisplay = FONT.render("SCORE : {}".format(snake.score), 1, (255, 255, 255))
-        #for asthetic effect, put nextColor in the color (possibly find a new way to structure this one day?)
+        # for asthetic effect, put nextColor in the color (possibly find a new way to structure this one day?)
         if food.foodCurrentColor == RED:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, RED)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, RED
+            )
         if food.foodCurrentColor == ORANGE:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, ORANGE)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, ORANGE
+            )
         if food.foodCurrentColor == YELLOW:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, YELLOW)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, YELLOW
+            )
         if food.foodCurrentColor == GREEN:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, GREEN)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, GREEN
+            )
         if food.foodCurrentColor == BLUE:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, BLUE)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, BLUE
+            )
         if food.foodCurrentColor == INDIGO:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, INDIGO)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, INDIGO
+            )
         if food.foodCurrentColor == VIOLET:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, VIOLET)
-        
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, VIOLET
+            )
+
         screen.blit(scoreDisplay, (5, 10))
         screen.blit(nextDisplay, (550, 10))
 
         pygame.display.update()
-        
+
+
 def main_hard():
     # draw screen and frames
     surface = pygame.Surface(screen.get_size())
     surface = surface.convert()
     drawGrid(surface)
 
-    # initialize classes, which is why we put capitals 
+    # initialize classes, which is why we put capitals
     snake = Snake()
     food = Food()
 
@@ -291,18 +368,32 @@ def main_hard():
     loopOST.set_volume(0.2)
     loopOST.play(-1)
 
+    hardPositions = []
+    food.randomize_position_hard()  # call this before drawing to make sure our position variables exist before being referenced
+    hardPositions.append(food.hardposition1)
+    hardPositions.append(food.hardposition2)
+    hardPositions.append(food.hardposition3)
+    hardPositions.append(food.hardposition4)
+    print(hardPositions)
+
     while True:
         # increment our clock at x FPS
         clock.tick(30)
         snake.handle_keys()
         # fill background
         drawGrid(surface)
-        
+
         snake.move()
-        if snake.get_head_position() == food.position1 or snake.get_head_position() == food.position2:
-            if snake.get_head_position() == food.position2 and food.r2color != food.foodCurrentColor:
-                """pygame.quit()
-                sys.exit(0)"""
+        if (
+            snake.get_head_position() == food.hardposition1
+            or snake.get_head_position() == food.hardposition2
+            or snake.get_head_position() == food.hardposition3
+            or snake.get_head_position() == food.hardposition4
+        ):
+            if (
+                snake.get_head_position() == food.hardposition2
+                and food.r2colorHard != food.foodCurrentColor
+            ):
                 pygame.mixer.stop()
                 deathSound = pygame.mixer.Sound("sounds/eats_wrong_color.wav")
                 deathSound.set_volume(0.2)
@@ -310,9 +401,31 @@ def main_hard():
                 print(snake.score)
                 time.sleep(1)
                 end_game()
-            else:    
+            if (
+                snake.get_head_position() == food.hardposition3
+                and food.r3colorHard != food.foodCurrentColor
+            ):
+                pygame.mixer.stop()
+                deathSound = pygame.mixer.Sound("sounds/eats_wrong_color.wav")
+                deathSound.set_volume(0.2)
+                deathSound.play()
+                print(snake.score)
+                time.sleep(1)
+                end_game()
+            if (
+                snake.get_head_position() == food.hardposition4
+                and food.r4colorHard != food.foodCurrentColor
+            ):
+                pygame.mixer.stop()
+                deathSound = pygame.mixer.Sound("sounds/eats_wrong_color.wav")
+                deathSound.set_volume(0.2)
+                deathSound.play()
+                print(snake.score)
+                time.sleep(1)
+                end_game()
+            else:
                 if snake.currentColor == RED:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = ORANGE
                     food.foodCurrentColor = YELLOW
                     food.foodCurrentColorName = "YELLOW"
@@ -320,9 +433,14 @@ def main_hard():
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    food.randomize_position()
+                    hardPositions = []
+                    food.randomize_position_hard()
+                    hardPositions.append(food.hardposition1)
+                    hardPositions.append(food.hardposition2)
+                    hardPositions.append(food.hardposition3)
+                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == ORANGE:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = YELLOW
                     food.foodCurrentColor = GREEN
                     food.foodCurrentColorName = "GREEN"
@@ -330,9 +448,14 @@ def main_hard():
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    food.randomize_position()
+                    hardPositions = []
+                    food.randomize_position_hard()
+                    hardPositions.append(food.hardposition1)
+                    hardPositions.append(food.hardposition2)
+                    hardPositions.append(food.hardposition3)
+                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == YELLOW:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = GREEN
                     food.foodCurrentColor = BLUE
                     food.foodCurrentColorName = "BLUE"
@@ -340,9 +463,14 @@ def main_hard():
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    food.randomize_position()
+                    hardPositions = []
+                    food.randomize_position_hard()
+                    hardPositions.append(food.hardposition1)
+                    hardPositions.append(food.hardposition2)
+                    hardPositions.append(food.hardposition3)
+                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == GREEN:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = BLUE
                     food.foodCurrentColor = INDIGO
                     food.foodCurrentColorName = "INDIGO"
@@ -350,9 +478,14 @@ def main_hard():
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    food.randomize_position()
+                    hardPositions = []
+                    food.randomize_position_hard()
+                    hardPositions.append(food.hardposition1)
+                    hardPositions.append(food.hardposition2)
+                    hardPositions.append(food.hardposition3)
+                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == BLUE:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = INDIGO
                     food.foodCurrentColor = VIOLET
                     food.foodCurrentColorName = "VIOLET"
@@ -360,9 +493,14 @@ def main_hard():
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    food.randomize_position()
+                    hardPositions = []
+                    food.randomize_position_hard()
+                    hardPositions.append(food.hardposition1)
+                    hardPositions.append(food.hardposition2)
+                    hardPositions.append(food.hardposition3)
+                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == INDIGO:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = VIOLET
                     food.foodCurrentColor = RED
                     food.foodCurrentColorName = "RED"
@@ -370,9 +508,14 @@ def main_hard():
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    food.randomize_position()
+                    hardPositions = []
+                    food.randomize_position_hard()
+                    hardPositions.append(food.hardposition1)
+                    hardPositions.append(food.hardposition2)
+                    hardPositions.append(food.hardposition3)
+                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == VIOLET:
-                    # if snake head is on same x, y as a food it has eaten it 
+                    # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = RED
                     food.foodCurrentColor = ORANGE
                     food.foodCurrentColorName = "ORANGE"
@@ -380,35 +523,54 @@ def main_hard():
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    food.randomize_position()
+                    hardPositions = []
+                    food.randomize_position_hard()
+                    hardPositions.append(food.hardposition1)
+                    hardPositions.append(food.hardposition2)
+                    hardPositions.append(food.hardposition3)
+                    hardPositions.append(food.hardposition4)
                 collectSound = pygame.mixer.Sound("sounds/collect_food.wav")
                 collectSound.set_volume(0.05)
                 collectSound.play()
-        
+
         # before updating our screen/frame, we need to redraw the snake and food based on their new positions
         snake.draw(surface)
-        food.draw(surface)
-        
+        food.draw_hard(surface)
+
         # update screen on event
         screen.blit(surface, (0, 0))
         # display and update our score
         scoreDisplay = FONT.render("SCORE : {}".format(snake.score), 1, (255, 255, 255))
-        #for asthetic effect, put nextColor in the color (possibly find a new way to structure this one day?)
+        # for asthetic effect, put nextColor in the color (possibly find a new way to structure this one day?)
         if food.foodCurrentColor == RED:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, RED)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, RED
+            )
         if food.foodCurrentColor == ORANGE:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, ORANGE)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, ORANGE
+            )
         if food.foodCurrentColor == YELLOW:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, YELLOW)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, YELLOW
+            )
         if food.foodCurrentColor == GREEN:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, GREEN)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, GREEN
+            )
         if food.foodCurrentColor == BLUE:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, BLUE)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, BLUE
+            )
         if food.foodCurrentColor == INDIGO:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, INDIGO)
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, INDIGO
+            )
         if food.foodCurrentColor == VIOLET:
-            nextDisplay = FONT.render("NEXT : {}".format(food.foodCurrentColorName), 1, VIOLET)
-        
+            nextDisplay = FONT.render(
+                "NEXT : {}".format(food.foodCurrentColorName), 1, VIOLET
+            )
+
         screen.blit(scoreDisplay, (5, 10))
         screen.blit(nextDisplay, (550, 10))
 
@@ -445,11 +607,12 @@ def main_menu():
 
         easyDiff = FONT.render("EASY DIFFICULTY", 1, GREEN)
         hardDiff = FONT.render("HARD DIFFICULTY", 1, RED)
- 
+
         # Main Menu Text
         screen.blit(easyDiff, (200, 400))
         screen.blit(hardDiff, (200, 300))
         pygame.display.update()
+
 
 def end_game():
     endMenu = True
@@ -474,10 +637,11 @@ def end_game():
         screen.blit(gameOver, (200, 400))
         screen.blit(scoreShow, (200, 300))
         pygame.display.update()
-    
+
+
 if __name__ == "__main__":
     pygame.init()
-    pygame.mixer.init() # init mixer to play sound
+    pygame.mixer.init()  # init mixer to play sound
     FONT = pygame.font.SysFont("arial", 16, bold=True)
     clock = pygame.time.Clock()
     main_menu()
