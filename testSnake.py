@@ -1,6 +1,7 @@
 import pygame
 import sys 
 import random
+import time
 
 # https://github.com/kiteco/python-youtube-code/blob/master/snake/snake.py 
 
@@ -59,6 +60,11 @@ class Snake(object):
         newPos = (((currentPos[0] + (x*GRIDSIZE)) % SCREEN_WIDTH), (currentPos[1] + (y*GRIDSIZE)) % SCREEN_HEIGHT)
         # check if game is over (our collision detection), [2:] checks if the new head of snake will hit a current part of the snake
         if len(self.positions) > 2 and newPos in self.positions[2:]:
+            deathSound = pygame.mixer.Sound("sounds/snake_hits_itself.wav")
+            deathSound.set_volume(0.2)
+            deathSound.play()
+            time.sleep(1)
+            pygame.mixer.stop()
             end_game()
         else:
             self.positions.insert(0, newPos)
@@ -142,6 +148,10 @@ def main():
 
     pygame.display.set_caption("SNAKE -- easy difficulty")
 
+    loopOST = pygame.mixer.Sound("sounds/easy_diff.wav")
+    loopOST.set_volume(0.1)
+    loopOST.play(-1) # -1 makes the sound loop forever when it ends
+
     while True:
         # increment our clock at x FPS
         clock.tick(10)
@@ -154,6 +164,11 @@ def main():
             if snake.get_head_position() == food.position2 and food.r2color != food.foodCurrentColor:
                 """pygame.quit()
                 sys.exit(0)"""
+                pygame.mixer.stop()
+                deathSound = pygame.mixer.Sound("sounds/eats_wrong_color.wav")
+                deathSound.set_volume(0.2)
+                deathSound.play()
+                time.sleep(1)
                 end_game()
             else:    
                 if snake.currentColor == RED:
@@ -226,6 +241,9 @@ def main():
                     snake.score += 1
                     # randomize x, y of next food block
                     food.randomize_position()
+                collectSound = pygame.mixer.Sound("sounds/collect_food.wav")
+                collectSound.set_volume(0.05)
+                collectSound.play()
         
         # before updating our screen/frame, we need to redraw the snake and food based on their new positions
         snake.draw(surface)
@@ -269,6 +287,10 @@ def main_hard():
 
     pygame.display.set_caption("SNAKE -- hard difficulty")
 
+    loopOST = pygame.mixer.Sound("sounds/hard_diff.wav")
+    loopOST.set_volume(0.2)
+    loopOST.play(-1)
+
     while True:
         # increment our clock at x FPS
         clock.tick(30)
@@ -281,7 +303,12 @@ def main_hard():
             if snake.get_head_position() == food.position2 and food.r2color != food.foodCurrentColor:
                 """pygame.quit()
                 sys.exit(0)"""
+                pygame.mixer.stop()
+                deathSound = pygame.mixer.Sound("sounds/eats_wrong_color.wav")
+                deathSound.set_volume(0.2)
+                deathSound.play()
                 print(snake.score)
+                time.sleep(1)
                 end_game()
             else:    
                 if snake.currentColor == RED:
@@ -354,6 +381,9 @@ def main_hard():
                     snake.score += 1
                     # randomize x, y of next food block
                     food.randomize_position()
+                collectSound = pygame.mixer.Sound("sounds/collect_food.wav")
+                collectSound.set_volume(0.05)
+                collectSound.play()
         
         # before updating our screen/frame, we need to redraw the snake and food based on their new positions
         snake.draw(surface)
@@ -390,6 +420,12 @@ def main_menu():
     selected = "easy"
     clock.tick(10)
 
+    pygame.display.set_caption("SNAKE -- main menu")
+
+    menuOST = pygame.mixer.Sound("sounds/title_screen.wav")
+    menuOST.set_volume(0.2)
+    menuOST.play(-1)
+
     while menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -398,9 +434,11 @@ def main_menu():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
                     selected = "easy"
+                    pygame.mixer.stop()
                     main()
                 if event.key == pygame.K_2:
                     selected = "hard"
+                    pygame.mixer.stop()
                     main_hard()
 
         screen.fill((0, 0, 255))
@@ -417,6 +455,8 @@ def end_game():
     endMenu = True
     clock.tick(10)
 
+    pygame.display.set_caption("SNAKE -- game over")
+
     while endMenu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -426,10 +466,9 @@ def end_game():
         screen.fill(BLACK)
 
         snake = Snake()
-        score = snake.giveScore()
 
         gameOver = FONT.render("Game Over", 1, WHITE)
-        scoreShow = FONT.render(f"Score : {score}", 1, WHITE)
+        scoreShow = FONT.render(f"Score : {snake.score}", 1, WHITE)
 
         # Main Menu Text
         screen.blit(gameOver, (200, 400))
@@ -438,6 +477,7 @@ def end_game():
     
 if __name__ == "__main__":
     pygame.init()
+    pygame.mixer.init() # init mixer to play sound
     FONT = pygame.font.SysFont("arial", 16, bold=True)
     clock = pygame.time.Clock()
     main_menu()
