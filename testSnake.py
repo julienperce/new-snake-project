@@ -35,6 +35,7 @@ RIGHT = (1, 0)
 
 class Snake(object):
     currentColor = RED
+    score = 0
 
     def __init__(self):
         self.length = 1
@@ -43,7 +44,7 @@ class Snake(object):
         ]  # list of all positions of each block that snake is made of
         self.direction = random.choice([UP, DOWN, LEFT, RIGHT])
         self.color = RED
-        self.score = 0
+        """self.score = 0"""
 
     def get_head_position(self):
         return self.positions[0]
@@ -202,7 +203,7 @@ def main():
     snake = Snake()
     food = Food()
 
-    pygame.display.set_caption("SNAKE -- easy difficulty")
+    pygame.display.set_caption("SNAKE 3001 -- easy")
 
     loopOST = pygame.mixer.Sound("sounds/easy_diff.wav")
     loopOST.set_volume(0.1)
@@ -362,19 +363,13 @@ def main_hard():
     snake = Snake()
     food = Food()
 
-    pygame.display.set_caption("SNAKE -- hard difficulty")
+    pygame.display.set_caption("SNAKE 3001 -- hard")
 
     loopOST = pygame.mixer.Sound("sounds/hard_diff.wav")
     loopOST.set_volume(0.2)
     loopOST.play(-1)
 
-    hardPositions = []
     food.randomize_position_hard()  # call this before drawing to make sure our position variables exist before being referenced
-    hardPositions.append(food.hardposition1)
-    hardPositions.append(food.hardposition2)
-    hardPositions.append(food.hardposition3)
-    hardPositions.append(food.hardposition4)
-    print(hardPositions)
 
     while True:
         # increment our clock at x FPS
@@ -430,105 +425,84 @@ def main_hard():
                     food.foodCurrentColor = YELLOW
                     food.foodCurrentColorName = "YELLOW"
                     food.r2color = random.choice(COLORS)
+                    food.r3colorHard = random.choice(COLORS)
+                    food.r4colorHard = random.choice(COLORS)
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    hardPositions = []
                     food.randomize_position_hard()
-                    hardPositions.append(food.hardposition1)
-                    hardPositions.append(food.hardposition2)
-                    hardPositions.append(food.hardposition3)
-                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == ORANGE:
                     # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = YELLOW
                     food.foodCurrentColor = GREEN
                     food.foodCurrentColorName = "GREEN"
                     food.r2color = random.choice(COLORS)
+                    food.r3colorHard = random.choice(COLORS)
+                    food.r4colorHard = random.choice(COLORS)
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    hardPositions = []
                     food.randomize_position_hard()
-                    hardPositions.append(food.hardposition1)
-                    hardPositions.append(food.hardposition2)
-                    hardPositions.append(food.hardposition3)
-                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == YELLOW:
                     # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = GREEN
                     food.foodCurrentColor = BLUE
                     food.foodCurrentColorName = "BLUE"
                     food.r2color = random.choice(COLORS)
+                    food.r3colorHard = random.choice(COLORS)
+                    food.r4colorHard = random.choice(COLORS)
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    hardPositions = []
                     food.randomize_position_hard()
-                    hardPositions.append(food.hardposition1)
-                    hardPositions.append(food.hardposition2)
-                    hardPositions.append(food.hardposition3)
-                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == GREEN:
                     # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = BLUE
                     food.foodCurrentColor = INDIGO
                     food.foodCurrentColorName = "INDIGO"
                     food.r2color = random.choice(COLORS)
+                    food.r3colorHard = random.choice(COLORS)
+                    food.r4colorHard = random.choice(COLORS)
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    hardPositions = []
                     food.randomize_position_hard()
-                    hardPositions.append(food.hardposition1)
-                    hardPositions.append(food.hardposition2)
-                    hardPositions.append(food.hardposition3)
-                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == BLUE:
                     # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = INDIGO
                     food.foodCurrentColor = VIOLET
                     food.foodCurrentColorName = "VIOLET"
                     food.r2color = random.choice(COLORS)
+                    food.r3colorHard = random.choice(COLORS)
+                    food.r4colorHard = random.choice(COLORS)
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    hardPositions = []
                     food.randomize_position_hard()
-                    hardPositions.append(food.hardposition1)
-                    hardPositions.append(food.hardposition2)
-                    hardPositions.append(food.hardposition3)
-                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == INDIGO:
                     # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = VIOLET
                     food.foodCurrentColor = RED
                     food.foodCurrentColorName = "RED"
                     food.r2color = random.choice(COLORS)
+                    food.r3colorHard = random.choice(COLORS)
+                    food.r4colorHard = random.choice(COLORS)
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    hardPositions = []
                     food.randomize_position_hard()
-                    hardPositions.append(food.hardposition1)
-                    hardPositions.append(food.hardposition2)
-                    hardPositions.append(food.hardposition3)
-                    hardPositions.append(food.hardposition4)
                 elif snake.currentColor == VIOLET:
                     # if snake head is on same x, y as a food it has eaten it
                     snake.currentColor = RED
                     food.foodCurrentColor = ORANGE
                     food.foodCurrentColorName = "ORANGE"
                     food.r2color = random.choice(COLORS)
+                    food.r3colorHard = random.choice(COLORS)
+                    food.r4colorHard = random.choice(COLORS)
                     snake.length += 1
                     snake.score += 1
                     # randomize x, y of next food block
-                    hardPositions = []
                     food.randomize_position_hard()
-                    hardPositions.append(food.hardposition1)
-                    hardPositions.append(food.hardposition2)
-                    hardPositions.append(food.hardposition3)
-                    hardPositions.append(food.hardposition4)
                 collectSound = pygame.mixer.Sound("sounds/collect_food.wav")
                 collectSound.set_volume(0.05)
                 collectSound.play()
@@ -582,11 +556,13 @@ def main_menu():
     selected = "easy"
     clock.tick(10)
 
-    pygame.display.set_caption("SNAKE -- main menu")
+    pygame.display.set_caption("SNAKE 3001")
 
     menuOST = pygame.mixer.Sound("sounds/title_screen.wav")
     menuOST.set_volume(0.2)
     menuOST.play(-1)
+
+    eventTypes = (pygame.QUIT, pygame.KEYDOWN)
 
     while menu:
         for event in pygame.event.get():
@@ -602,15 +578,13 @@ def main_menu():
                     selected = "hard"
                     pygame.mixer.stop()
                     main_hard()
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit(0)
 
-        screen.fill((0, 0, 255))
+        title = pygame.image.load("img/new_title.png")
+        screen.blit(title, (0, 0))
 
-        easyDiff = FONT.render("EASY DIFFICULTY", 1, GREEN)
-        hardDiff = FONT.render("HARD DIFFICULTY", 1, RED)
-
-        # Main Menu Text
-        screen.blit(easyDiff, (200, 400))
-        screen.blit(hardDiff, (200, 300))
         pygame.display.update()
 
 
@@ -618,24 +592,54 @@ def end_game():
     endMenu = True
     clock.tick(10)
 
-    pygame.display.set_caption("SNAKE -- game over")
+    pygame.display.set_caption("SNAKE 3001 -- game over")
+
+    endOST = pygame.mixer.Sound("sounds/Space.mp3")
+    endOST.set_volume(0.1)
+    endOST.play(-1)
+
+    endQuotes = [
+        "'We are healed of a suffering only by experiencing it in full.' - Marcel Proust",
+        "'Suffering is one of life's greatest teachers.' - Bryant McGill",
+        "'Success is not final, failure is not fatal: it is the courage to continue that counts.' - Winston Churchill",
+        "'A bend in the road is not the end of the road... unless you fail to make the turn.' - Helen Keller",
+        "'Failure is only the opportunity to begin again, this time more intelligently.' - Henry Ford",
+        "'Fall seven times and stand up eight.' - Japanese Proverb",
+        "'Perseverance, secret of all triumphs.' - Victor Hugo",
+        "'In general, any form of exercise, if pursued continuously, will help us train in perseverance.' - Mao Zedong",
+        "'Every accomplishment starts with the decision to try. ' - John F. Kennedy",
+    ]
+    quote = random.choice(endQuotes)
 
     while endMenu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit(0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    main()
+                if event.key == pygame.K_2:
+                    main_hard()
+                if event.key == pygame.K_q:
+                    pygame.quit(0)
+                    sys.exit(0)
 
         screen.fill(BLACK)
 
         snake = Snake()
 
-        gameOver = FONT.render("Game Over", 1, WHITE)
+        gameoverFONT = pygame.font.SysFont("DejaVu Serif", 20, bold=True)
+        gameOver = gameoverFONT.render("Game Over", 1, RED)
         scoreShow = FONT.render(f"Score : {snake.score}", 1, WHITE)
+
+        quoteFONT = pygame.font.SysFont("DejaVu Serif", 13, bold=False, italic=True)
+        quoteShow = quoteFONT.render(quote, 1, WHITE)
 
         # Main Menu Text
         screen.blit(gameOver, (200, 400))
         screen.blit(scoreShow, (200, 300))
+        screen.blit(quoteShow, (10, 500))
         pygame.display.update()
 
 
