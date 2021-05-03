@@ -622,8 +622,11 @@ def end_game():
                 if event.key == pygame.K_2:
                     main_hard()
                 if event.key == pygame.K_q:
-                    pygame.quit(0)
+                    pygame.quit()
                     sys.exit(0)
+                if event.key == pygame.K_c:
+                    credits_menu()
+
 
         screen.fill(BLACK)
 
@@ -640,6 +643,37 @@ def end_game():
         screen.blit(gameOver, (200, 400))
         screen.blit(scoreShow, (200, 300))
         screen.blit(quoteShow, (10, 500))
+        pygame.display.update()
+
+def credits_menu():
+    creditsMenu = True
+    
+    clock.tick(10)
+    pygame.display.set_caption("SNAKE 3001 -- credits")
+    
+    while creditsMenu:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    pygame.mixer.stop()
+                    main()
+                if event.key == pygame.K_2:
+                    pygame.mixer.stop()
+                    main_hard()
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit(0)
+                if event.key == pygame.K_b:
+                    pygame.mixer.stop()
+                    end_game()
+        
+        screen.fill(BLACK)
+        
+        devInfo = FONT.render("JP", 1, WHITE)
+        screen.blit(devInfo, (300, 300))
         pygame.display.update()
 
 
