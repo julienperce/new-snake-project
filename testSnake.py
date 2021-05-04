@@ -225,8 +225,6 @@ def main():
                 snake.get_head_position() == food.position2
                 and food.r2color != food.foodCurrentColor
             ):
-                """pygame.quit()
-                sys.exit(0)"""
                 pygame.mixer.stop()
                 deathSound = pygame.mixer.Sound("sounds/eats_wrong_color.wav")
                 deathSound.set_volume(0.2)
@@ -608,6 +606,7 @@ def end_game():
         "'Perseverance, secret of all triumphs.' - Victor Hugo",
         "'In general, any form of exercise, if pursued continuously, will help us train in perseverance.' - Mao Zedong",
         "'Every accomplishment starts with the decision to try. ' - John F. Kennedy",
+        "'With every death, comes honor. With honor - redemption.' - Hanzo Shimada",
     ]
     quote = random.choice(endQuotes)
 
@@ -618,39 +617,44 @@ def end_game():
                 sys.exit(0)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_1:
+                    pygame.mixer.stop()
                     main()
                 if event.key == pygame.K_2:
+                    pygame.mixer.stop()
                     main_hard()
                 if event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit(0)
                 if event.key == pygame.K_c:
                     credits_menu()
-
+                if event.key == pygame.K_m:
+                    pygame.mixer.stop()
+                    main_menu()
 
         screen.fill(BLACK)
 
         snake = Snake()
 
-        gameoverFONT = pygame.font.SysFont("DejaVu Serif", 20, bold=True)
-        gameOver = gameoverFONT.render("Game Over", 1, RED)
-        scoreShow = FONT.render(f"Score : {snake.score}", 1, WHITE)
-
         quoteFONT = pygame.font.SysFont("DejaVu Serif", 13, bold=False, italic=True)
         quoteShow = quoteFONT.render(quote, 1, WHITE)
 
+        endScreen = pygame.image.load("img/end_screen.png")
+
+        scoreText = quoteFONT.render("Score: embarassingly low", 1, WHITE)
+
         # Main Menu Text
-        screen.blit(gameOver, (200, 400))
-        screen.blit(scoreShow, (200, 300))
-        screen.blit(quoteShow, (10, 500))
+        screen.blit(endScreen, (0, 0))
+        screen.blit(quoteShow, (10, 250))
+        screen.blit(scoreText, (10, 220))
         pygame.display.update()
+
 
 def credits_menu():
     creditsMenu = True
-    
+
     clock.tick(10)
     pygame.display.set_caption("SNAKE 3001 -- credits")
-    
+
     while creditsMenu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -666,14 +670,14 @@ def credits_menu():
                 if event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit(0)
-                if event.key == pygame.K_b:
+                if event.key == pygame.K_m:
                     pygame.mixer.stop()
-                    end_game()
-        
+                    main_menu()
+
         screen.fill(BLACK)
-        
-        devInfo = FONT.render("JP", 1, WHITE)
-        screen.blit(devInfo, (300, 300))
+
+        creditImg = pygame.image.load("img/test_end1.png")
+        screen.blit(creditImg, (0, 0))
         pygame.display.update()
 
 
